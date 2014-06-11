@@ -3,6 +3,7 @@
 // Copyright (c) 2014 Frycoin developers / f0o <f0o@Obfuscode.Net>
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// Best viewed with tab-spacing set to '2'
 
 #include "alert.h"
 #include "checkpoints.h"
@@ -996,17 +997,29 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock) {
 }
 
 int64 static GetBlockValue(int nHeight, int64 nFees) {
+/*
+Phase-Blockhalving
+	400000 = 300
+	550000 = 150
+	700000 = 75
+	850000 = 50
+	...... = 50
+*/
 	int64 nSubsidy = 300 * COIN;
-/*	int64 nSubsidy = 50 * COIN;
-	if( fTestNet && nHeight < 10 ) {
+	if( fTestNet )
+		if( nHeight < 10 ) {
+			nSubsidy = 300 * COIN;
+			if( nHeight >= 5 )
+				nSubsidy >>= ((nHeight - 5 + 2) / 2);
+		}
+	else if( nHeight >= 850000 )
+		nSubsidy =  50 * COIN;
+	else if( nHeight >= 700000 )
+		nSubsidy =  75 * COIN;
+	else if( nHeight >= 550000 )
+		nSubsidy = 150 * COIN;
+	else if( nHeight >= 400000 )
 		nSubsidy = 300 * COIN;
-		if( nHeight >= 5 )
-			nSubsidy >>= ((nHeight - 5 + 2) / 2);
-	} else if( !fTestNet && nHeight < 700000 ) {
-		nSubsidy = 300 * COIN;
-		if( nHeight >= 250000 )
-				nSubsidy >>= ((nHeight - 250000 + 150000) / 150000);
-	} */
 	return nSubsidy + nFees;
 }
 
