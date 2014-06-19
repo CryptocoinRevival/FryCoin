@@ -1005,13 +1005,13 @@ Phase-Blockhalving
 	...... = 50
 */
 	int64 nSubsidy = 300 * COIN;
-	if( fTestNet )
+	if( fTestNet ) {
 		if( nHeight < 10 ) {
 			nSubsidy = 300 * COIN;
 			if( nHeight >= 5 )
 				nSubsidy >>= ((nHeight - 5 + 2) / 2);
 		}
-	else if( nHeight >= 550000 )
+	} else if( nHeight >= 550000 )
 		nSubsidy =  50 * COIN;
 	else if( nHeight >= 400000 )
 		nSubsidy = 75 * COIN;
