@@ -57,7 +57,7 @@ static bool Pulse(CBlockIndex* prevBlock, CBlock* block) {
 			}
 			value = Pulse(value, fee, nHeight, blockIndex.nBits);
 			if( PULSE_FACTOR[i] == true ) {
-				int64 bvalue = GetBlockValue(nHeight, 0, blockIndex.nBits);
+				int64 bvalue = GetBlockValue(nHeight, 0);
 				if( PULSE_MIN_VALUE[i] > 0 && value >= (PULSE_MIN_VALUE[i] * bvalue) ) {
 					score++;
 				}
