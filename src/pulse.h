@@ -9,7 +9,7 @@ class CBlock;
 class CBlockIndex;
 class CCoinsView;
 class CCoinsViewCache;
-static int64 GetBlockValue(int nHeight, int64 nFees, unsigned int nBits);
+static int64 GetBlockValue(int nHeight, int64 nFees);
 extern CCoinsViewCache *pcoinsTip;
 
 static const          int PULSE_HEIGHT[]    = { 265000 }; /** Height to start Pulse */

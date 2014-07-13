@@ -8,7 +8,7 @@
 /* Pulse(int64 value, int64 fee, int nHeight, unsigned int nBits) : int64 >= 0
    Returns value of proposed Block using algoritmic aproaches */
 static int64 Pulse(int64 value, int64 fee, int nHeight, unsigned int nBits) {
-	return value - GetBlockValue(nHeight, fee, nBits);
+	return value - GetBlockValue(nHeight, fee);
 }
 
 /* Pulse(int nHeight) ? true : false
