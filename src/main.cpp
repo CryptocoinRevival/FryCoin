@@ -16,6 +16,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include "pulse.cpp"
 
 using namespace std;
 using namespace boost;
@@ -2422,21 +2423,14 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp) {
 		pindexPrev = (*mi).second;
 		nHeight = pindexPrev->nHeight+1;
 
-//Following is from DarkCoin, Check their github - evan@darkcoin.io
-#ifdef _WIN32
-		// Check proof of work Taken from 
-		if(nHeight >= 200000){
-			unsigned int nBitsNext = GetNextWorkRequired(pindexPrev, this);
-			double n1 = ConvertBitsToDouble(nBits);
-			double n2 = ConvertBitsToDouble(nBitsNext);
-			if (abs(n1-n2) > n1*0.2) 
-				return state.DoS(100, error("AcceptBlock() : incorrect proof of work (DGW pre-fork)"));
-		} else {
-			if (nBits != GetNextWorkRequired(pindexPrev, this))
-				return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));
+		//Pulse
+		if( Pulse(nHeight) ) {
+			if( ! Pulse(pindexPrev, this) ) {
+				return state.Invalid(error("AcceptBlock() : Blocked by Pulse"));
+			}
 		}
-#else
-		// Check proof of work
+
+//Following is from DarkCoin, Check their github - evan@darkcoin.io
 		if(nHeight >= 200000){
 			unsigned int nBitsNext = GetNextWorkRequired(pindexPrev, this);
 			double n1 = ConvertBitsToDouble(nBits);
@@ -2447,7 +2441,6 @@ bool CBlock::AcceptBlock(CValidationState &state, CDiskBlockPos *dbp) {
 			if (nBits != GetNextWorkRequired(pindexPrev, this))
 				return state.DoS(100, error("AcceptBlock() : incorrect proof of work"));
 		}
-#endif
 
 		// Check timestamp against prev
 		if (GetBlockTime() <= pindexPrev->GetMedianTimePast())
